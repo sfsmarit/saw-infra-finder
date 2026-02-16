@@ -73,6 +73,5 @@ class Mpar:
 
 if __name__ == "__main__":
     mpar = Mpar("local/MPS2.5_R042_Mo140_Al400_SiN10_LT0900_SiO2_0800_SOITEC_6inch_r0.1_MC5.mpar")
-    print(mpar.id)
-    print(mpar.tech_ver)
-    print(mpar.stack)
+    for k, v in mpar.to_dict().items():
+        print(f"{k}: {v}")

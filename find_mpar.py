@@ -5,12 +5,15 @@ import json
 from mpar import Mpar
 
 
+SUFFIX = ".mpar"
+
+
 def get_mpar_paths(root_dir: str) -> list[Path]:
     result = []
     root = Path(root_dir)
     if root.is_dir():
-        result.extend(root.rglob("*.mpar"))
-    elif root.is_file() and root.suffix == ".mpar":
+        result.extend(root.rglob(f"*{SUFFIX}"))
+    elif root.is_file() and root.suffix == SUFFIX:
         result.append(root)
     return result
 
