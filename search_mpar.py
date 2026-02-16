@@ -50,7 +50,7 @@ if __name__ == "__main__":
         for i, path in enumerate(paths):
             mpar = Mpar(paths[0])
             mpars[mpar.name] = mpar.to_dict()
-            print(f"[{i+1}/{len(paths)}] : {path}")
+            print(f"[{i+1}/{len(paths)}] : {mpar.name}")
 
     # Write the mpars dictionary to a JSON file
     with open(dst, "w", encoding="utf-8") as f:
