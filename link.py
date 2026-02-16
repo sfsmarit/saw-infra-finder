@@ -52,11 +52,11 @@ def link_mpar():
     dst = "output/link_mpar.json"
 
     # Mpar 読み込み
-    with open("output/mpar_path.json", "r", encoding="utf-8") as f:
+    with open("output/mpar.json", "r", encoding="utf-8") as f:
         mpars: dict[str, MparDict] = json.load(f)
 
     # Rpar 読み込み
-    with open("output/rpar_path.json", "r", encoding="utf-8") as f:
+    with open("output/rpar.json", "r", encoding="utf-8") as f:
         rpars: dict[str, RparDict] = json.load(f)
 
     link = {}
@@ -65,7 +65,7 @@ def link_mpar():
             "rpar": find_rpar_from_mpar(rpars, mpar),
         }
         print(name)
-        print(link[name])
+        print("\t", link[name])
 
     with open(dst, "w", encoding="utf-8") as f:
         json.dump(link, f, indent=4, ensure_ascii=False)

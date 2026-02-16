@@ -9,7 +9,7 @@ from rpar import Rpar
 SUFFIX = ".rpar"
 
 
-def get_mpar_paths(root_dir: str) -> list[Path]:
+def get_filepaths(root_dir: str) -> list[Path]:
     result = []
     root = Path(root_dir)
     if root.is_dir():
@@ -29,6 +29,8 @@ def sort_dict_natural(d: dict[str, object]) -> dict[str, object]:
 
 
 if __name__ == "__main__":
+    dst = "output/rpar.json"
+
     if os.name == "nt":
         root_dirs = {
             "all": "local/"
@@ -38,12 +40,10 @@ if __name__ == "__main__":
             "all": "/rds/devel/R/HOTCODE/amslibs/oa614/cdslibs/saw2_lb/comLib/COM/"
         }
 
-    dst = "output/rpar_path.json"
-
     result = {}
     for tech, root_dir in root_dirs.items():
         # Find all .mpar files in the root directory and its subdirectories
-        paths = get_mpar_paths(root_dir)
+        paths = get_filepaths(root_dir)
 
         # Create Mpar objects from the paths and store their dictionary representations in the mpars dictionary
         for i, path in enumerate(paths):
