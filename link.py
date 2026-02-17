@@ -46,15 +46,11 @@ def find_rpars_from_mpar(rpars: dict[str, RparDict], mpar: MparDict) -> list[str
     for name, rpar in rpars.items():
         # mpar 名が一致する rpar を探す
         if rpar["mpar"] == mpar_name:
-            return name
+            rpar_names.append(name)
+            continue
 
         # mpar と rpar のスタックが同じであれば、mpar 名が一致しなくても rpar をリンクする
         r_stack = rpar["stack"]
-
-        if "R042_Mo140_Al400_SiN20_LT0900_SiO2_0800" in mpar_name:
-            print("mpar:", mpar_name)
-            print(rpar)
-            print(_is_same_mps_stack(mpar_stack, r_stack))
 
         if is_mps:
             if _is_same_mps_stack(mpar_stack, r_stack):
