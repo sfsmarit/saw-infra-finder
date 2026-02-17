@@ -40,9 +40,13 @@ def merge_mpar_stack(mpars: dict, rpar: Rpar):
             return
 
 
-def merge_stack_from_db(rpar: Rpar, db: pd.DataFrame):
+def merge_db_stack_for_mps(rpar: Rpar, db: pd.DataFrame):
     row = db.loc[db["id"] == rpar.id, "piezo"]
     rpar.stack['piezo'] = row.iloc[0] if not row.empty else '42_LT'
+
+
+def merge_db_stack_for_tcsaw(rpar: Rpar, db: pd.DataFrame):
+    rpar.stack['piezo'] = ""
 
 
 if __name__ == "__main__":
@@ -63,6 +67,7 @@ if __name__ == "__main__":
             mpars = json.load(f)
 
     df_mpsdb = db.load("comparamsmps2")
+    df_tcsaw = db.load("comparams")
 
     result = {}
     for tech, root_dir in root_dirs.items():
@@ -76,9 +81,11 @@ if __name__ == "__main__":
             # Mpar が指定されていればMparのスタックを追加する
             merge_mpar_stack(mpars, rpar)
 
-            # DB からpiezo情報を取得する
+            # DB からもスタック情報を取得する
             if rpar.is_mps:
-                merge_stack_from_db(rpar, df_mpsdb)
+                merge_db_stack_for_mps(rpar, df_mpsdb)
+            else:
+                merge_db_stack_for_tcsaw(rpar, df_tcsaw)
 
             result[rpar.name] = rpar.to_dict()
             print(f"[{i+1}/{len(paths)}] {rpar.name}")
