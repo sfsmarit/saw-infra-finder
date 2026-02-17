@@ -40,8 +40,9 @@ def merge_mpar_stack(mpars: dict, rpar: Rpar):
             return
 
 
-def add_stack_from_db(rpar: Rpar, db: pd.DataFrame):
-    rpar.stack["piezo"] = db.loc[rpar.id, "piezo"]
+def merge_stack_from_db(rpar: Rpar, db: pd.DataFrame):
+    row = db.loc[db["id"] == rpar.id, "piezo"]
+    rpar.stack['piezo'] = row.iloc[0] if not row.empty else '42_LT'
 
 
 if __name__ == "__main__":
@@ -77,7 +78,7 @@ if __name__ == "__main__":
 
             # DB からpiezo情報を取得する
             if rpar.is_mps:
-                add_stack_from_db(rpar, df_mpsdb)
+                merge_stack_from_db(rpar, df_mpsdb)
 
             result[rpar.name] = rpar.to_dict()
             print(f"[{i+1}/{len(paths)}] {rpar.name}")

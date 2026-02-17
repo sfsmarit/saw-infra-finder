@@ -38,7 +38,7 @@ def load(table_name: str) -> pd.DataFrame:
     if "mps" in table_name:
         df = add_piezo_column_for_mps(df)
 
-    return df.set_index("id")
+    return df
 
 
 def add_piezo_column_for_mps(df: pd.DataFrame) -> pd.DataFrame:
