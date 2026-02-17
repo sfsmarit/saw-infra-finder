@@ -51,7 +51,10 @@ def merge_db_stack_for_tcsaw(rpar: Rpar, db: pd.DataFrame):
 
 def is_valid(rpar: Rpar, db: pd.DataFrame) -> bool:
     row = db.loc[db["id"] == rpar.id, "version"]
-    return int(row.iloc[0]) > 1 if not row.empty else False
+    try:
+        return int(row.iloc[0]) > 1
+    except:
+        return False
 
 
 if __name__ == "__main__":
