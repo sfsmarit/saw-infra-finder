@@ -55,9 +55,12 @@ if __name__ == "__main__":
             rpar = Rpar(path)
 
             # 対応するMparが分かっている場合は、MparのスタックをRparのスタックに追加する
-            if mpars and rpar.mpar_stem:
+            if mpars and rpar.mpar:
+                s = Path(rpar.mpar).stem
                 for name, mpar in mpars:
-                    if rpar.mpar_stem in name:
+                    if s in name:
+                        print(s)
+                        print(mpar)
                         rpar.stack |= mpar["stack"]
                         break
 
