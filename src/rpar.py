@@ -11,10 +11,14 @@ class RparDict(TypedDict):
 
 class Rpar:
     def __init__(self, filepath) -> None:
-        self.filepath = Path(filepath)
+        self.filepath: Path = Path(filepath)
         self.load(filepath)
 
     def load(self, filepath):
+        # ファイル名から ID を抽出
+        m = re.search(r'(?<=_)(\d+)(?=\.)', Path(filepath).stem)
+        self.id: str = m.group(1) if m else ""
+
         self.mpar: str = ""
         self.stack: dict = {}
 
@@ -48,6 +52,14 @@ class Rpar:
     @property
     def name(self) -> str:
         return self.filepath.name
+
+    @property
+    def is_mps(self) -> bool:
+        return "mps" in self.name
+
+    @property
+    def is_tcsaw(self) -> bool:
+        return not self.is_mps
 
     def _extract_parameter(self) -> str:
         """#parameter セクションからダブルクォート内の内容を抽出する"""

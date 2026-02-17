@@ -3,7 +3,7 @@ from pathlib import Path
 import json
 import re
 
-from mpar import Mpar
+from src.mpar import Mpar
 
 
 SUFFIX = ".mpar"

@@ -2,8 +2,10 @@ import os
 from pathlib import Path
 import json
 import re
+import pandas as pd
 
-from rpar import Rpar
+from src import db
+from src.rpar import Rpar
 
 
 SUFFIX = ".rpar"
@@ -28,6 +30,20 @@ def sort_dict_natural(d: dict[str, object]) -> dict[str, object]:
     return {k: d[k] for k in keys}
 
 
+def merge_mpar_stack(mpars: dict, rpar: Rpar):
+    if not mpars or not rpar.mpar:
+        return
+    s = Path(rpar.mpar).stem
+    for name, mpar in mpars.items():
+        if s in name:
+            rpar.stack |= mpar["stack"]
+            return
+
+
+def add_stack_from_db(rpar: Rpar, db: pd.DataFrame):
+    print(db[rpar.id])
+
+
 if __name__ == "__main__":
     dst = "output/rpar.json"
 
@@ -45,6 +61,8 @@ if __name__ == "__main__":
         with open("output/mpar.json", "r", encoding="utf-8") as f:
             mpars = json.load(f)
 
+    df_mpsdb = db.load("comparamsmps2")
+
     result = {}
     for tech, root_dir in root_dirs.items():
         # Find all .mpar files in the root directory and its subdirectories
@@ -54,15 +72,12 @@ if __name__ == "__main__":
         for i, path in enumerate(paths):
             rpar = Rpar(path)
 
-            # 対応するMparが分かっている場合は、MparのスタックをRparのスタックに追加する
-            if mpars and rpar.mpar:
-                s = Path(rpar.mpar).stem
-                for name, mpar in mpars.items():
-                    if s in name:
-                        print(s)
-                        print(mpar)
-                        rpar.stack |= mpar["stack"]
-                        break
+            # Mpar が指定されていればMparのスタックを追加する
+            merge_mpar_stack(mpars, rpar)
+
+            # DB からpiezo情報を取得する
+            if rpar.is_mps:
+                add_stack_from_db(rpar, df_mpsdb)
 
             result[rpar.name] = rpar.to_dict()
             print(f"[{i+1}/{len(paths)}] {rpar.name}")

@@ -1,8 +1,8 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from mpar import MparDict
-    from rpar import RparDict
+    from src.mpar import MparDict
+    from src.rpar import RparDict
 
 from pathlib import Path
 import json
