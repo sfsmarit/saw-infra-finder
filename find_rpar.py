@@ -40,6 +40,11 @@ if __name__ == "__main__":
             "all": "/rds/devel/R/HOTCODE/amslibs/oa614/cdslibs/saw2_lb/comLib/COM/"
         }
 
+    mpars = {}
+    if Path("output/mpar.json").exists():
+        with open("output/mpar.json", "r", encoding="utf-8") as f:
+            mpars = json.load(f)
+
     result = {}
     for tech, root_dir in root_dirs.items():
         # Find all .mpar files in the root directory and its subdirectories
@@ -48,6 +53,13 @@ if __name__ == "__main__":
         # Create Mpar objects from the paths and store their dictionary representations in the mpars dictionary
         for i, path in enumerate(paths):
             rpar = Rpar(path)
+
+            # 対応するMparが分かっている場合は、MparのスタックをRparのスタックに追加する
+            if mpars and rpar.mpar_stem:
+                mpar = mpars.get(rpar.mpar_stem, {})
+                mpar_stack = mpar.get("stack", {})
+                rpar.stack |= mpar_stack
+
             result[rpar.name] = rpar.to_dict()
             print(f"[{i+1}/{len(paths)}] {rpar.name}")
 

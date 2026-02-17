@@ -16,6 +16,7 @@ class Rpar:
 
     def load(self, filepath):
         self.mpar: str = ""
+        self.mpar_stem: str = ""
         self.stack: dict = {}
 
         with open(filepath, "r", encoding="utf-8") as f:
@@ -24,6 +25,7 @@ class Rpar:
         # rpar は common セクションがあればそちらから mpar と stack を抽出し、なければ parameter や range から個別に抽出する
         if "#common" in self.text:
             self.mpar, self.stack = self._extract_common_info()
+            self.mpar_stem = Path(self.mpar).stem
             return
 
         # parameterセクションから mpar または stack を抽出
