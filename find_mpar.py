@@ -3,6 +3,7 @@ from pathlib import Path
 import json
 import re
 
+from src import db
 from src.mpar import Mpar
 
 
@@ -51,6 +52,10 @@ if __name__ == "__main__":
             "mps": "/prj/SAW_INFRA/MPS/"
         }
 
+    # DB に登録されている ID を取得
+    df = db.load("mpars")
+    registered_ids = df["infra_tracking_id"].to_list()
+
     result = {}
     for tech, root_dir in root_dirs.items():
         # Find all .mpar files in the root directory and its subdirectories
@@ -62,6 +67,12 @@ if __name__ == "__main__":
         # Create Mpar objects from the paths and store their dictionary representations in the mpars dictionary
         for i, path in enumerate(paths):
             mpar = Mpar(path)
+
+            # IDが登録されていないものは除外
+            if mpar.id not in registered_ids:
+                print(f"\tSkip {mpar.id}")
+                continue
+
             result[mpar.name] = mpar.to_dict()
             print(f"[{i+1}/{len(paths)}] {mpar.name}")
 
